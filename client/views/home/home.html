@@ -1,0 +1,245 @@
+<template name="Home">
+	<div class="page-container container" id="content">
+		<div class="row" id="title_row">
+			<div class="col-md-12">
+				<div id="page_menu" class="pull-right">
+				</div>
+			</div>
+		</div>
+		{{> HomeDvPhonebook}}{{> HomeFormInsert}}
+		<div class="modal crud-insert-form-container" id="field-phone-insert-form" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						{{> HomeFieldPhoneInsertFormContainerFieldPhoneInsertForm}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="HomeDvPhonebook">
+	<div id="home-dv-phonebook" class="">
+		<h2 id="component-title">
+			Your Phonebook
+		</h2>
+		<form id="dataview-controls" class="form-inline">
+			<div id="dataview-controls-search">
+				{{#if isNotEmpty}}
+				<div id="dataview-controls-search-group" class="form-group">
+					<label class="sr-only" for="search">
+						Search
+					</label>
+					<input type="text" class="form-control" id="dataview-search-input" placeholder="Search" name="search" value="{{searchString}}" autofocus="autofocus">
+					<button type="button" id="dataview-search-button" class="btn btn-primary">
+						<span class="fa fa-search">
+						</span>
+					</button>
+				</div>
+				{{/if}}
+			</div>
+		</form>
+		{{#if isNotEmpty}}
+			{{#if isNotFound}}
+		<div class="alert alert-warning">
+			"{{searchString}}" not found.
+		</div>
+		{{else}}
+		<div id="dataview-data">
+			{{#if viewAsTable}} {{> HomeDvPhonebookTable}} {{/if}}
+		</div>
+		{{/if}}
+		{{else}}
+		<div class="alert alert-info">
+			Empty.
+		</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="HomeDvPhonebookTable">
+	<table id="dataview-table" class="table table-striped">
+		<thead id="dataview-table-header">
+			<tr id="dataview-table-header-row">
+				<th class="th-sortable" data-sort="name">
+					name
+				</th>
+				<th class="th-sortable" data-sort="phone">
+					phone
+				</th>
+			</tr>
+		</thead>
+		<tbody id="dataview-table-items">
+			{{#each tableItems}} {{> HomeDvPhonebookTableItems}} {{/each}}
+		</tbody>
+	</table>
+</template>
+
+<template name="HomeDvPhonebookTableItems">
+	<tr id="dataview-table-items-row">
+		<td>
+			{{name}}
+		</td>
+		<td>
+			{{joinStringsStd phone}}
+		</td>
+	</tr>
+</template>
+
+<template name="HomeFormInsert">
+	<div id="home-form-insert" class="">
+		<h2 id="component-title">
+			INSERT Form
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-name">
+				<label for="name">
+					Name
+				</label>
+				<div class="input-div">
+					<input type="text" name="name" value="" class="form-control" autofocus="autofocus" data-type="string">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-phone">
+				<label for="phone">
+					Phone
+				</label>
+				<div class="input-div">
+					<table class="table table-striped">
+						<thead>
+							<tr class="crud-table-controls">
+								<td colspan="2">
+									<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#field-phone-insert-form">
+										<span class="fa fa-plus">
+										</span>
+										Add
+									</button>
+								</td>
+							</tr>
+							{{#if phoneCrudItems}}
+							<tr class="crud-table-header">
+								<th>
+									Phonetype
+								</th>
+								<th>
+									Number
+								</th>
+								<th>
+									&nbsp;
+								</th>
+							</tr>
+							{{/if}}
+						</thead>
+						<tbody>
+							{{#each phoneCrudItems}}
+							<tr class="crud-table-row">
+								<td>
+									{{type}}
+								</td>
+								<td>
+									{{number}}
+								</td>
+								<td class="td-icon delete-icon">
+									<span class="fa fa-trash-o" title="Delete">
+									</span>
+								</td>
+							</tr>
+							{{/each}}
+						</tbody>
+					</table>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+
+<template name="HomeFieldPhoneInsertFormContainerFieldPhoneInsertForm">
+	<div id="home-field-phone-insert-form-container-field-phone-insert-form" class="">
+		<h2 id="component-title">
+			Insert
+		</h2>
+		<form role="form">
+			{{#if errorMessage}}
+			<div class="alert alert-warning">
+				{{errorMessage}}
+			</div>
+			{{/if}}
+
+			{{#if infoMessage}}
+			<div class="alert alert-success">
+				{{infoMessage}}
+			</div>
+			{{/if}}
+			<div class="form-group  field-type">
+				<label for="type">
+					Phonetype
+				</label>
+				<div class="input-div">
+					<select class="form-control" name="type" autofocus="autofocus">
+						{{#each phonetypes_all}}
+						<option value="{{type}}">							{{type}}</option>
+						{{/each}}
+					</select>
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group  field-number">
+				<label for="number">
+					Number
+				</label>
+				<div class="input-div">
+					<input type="text" name="number" value="" class="form-control">
+					<span id="help-text" class="help-block">
+					</span>
+					<span id="error-text" class="help-block">
+					</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="submit-div">
+					<button id="form-submit-button" class="btn btn-success" type="submit">
+						<span class="fa fa-check">
+						</span>
+						Save
+					</button>
+					<a href="#" id="form-cancel-button" class="btn btn-default">
+						Cancel
+					</a>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+
